@@ -1,1 +1,155 @@
-# Os-sem
+1.first come first serve 
+
+#include <stdio.h>
+int main()
+{
+    int n, i, bt[10], wt[10], tat[10];
+    float awt = 0, atat = 0;
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    for(i = 0; i < n; i++)
+    {
+        printf("Burst time of P%d: ", i + 1);
+        scanf("%d", &bt[i]);
+    }
+
+    wt[0] = 0;
+
+    for(i = 1; i < n; i++)
+        wt[i] = wt[i-1] + bt[i-1];
+
+    printf("\nProcess\tBT\tWT\tTAT\n");
+
+    for(i = 0; i < n; i++)
+    {
+        tat[i] = wt[i] + bt[i];
+        awt += wt[i];
+        atat += tat[i];
+
+        printf("P%d\t%d\t%d\t%d\n",
+        i+1, bt[i], wt[i], tat[i]);
+    }
+
+    printf("Average WT = %.2f\n", awt/n);
+    printf("Average TAT = %.2f\n", atat/n);
+
+    return 0;
+}
+
+2.shortest job first algorithm
+
+#include <stdio.h>
+int main() 
+{
+ int n, i, j, bt[10], p[10], wt[10], tat[10], temp;
+ float avgwt = 0, avgtat = 0;
+ printf("Enter number of processes: ");
+ scanf("%d", &n);
+ for (i = 0; i < n; i++)
+{
+ p[i] = i + 1;
+ printf("Burst time of P%d: ", p[i]);
+ scanf("%d", &bt[i]);
+ } for (i = 0; i < n - 1; i++)
+ for (j = i + 1; j < n; j++)
+ if (bt[i] > bt[j])
+{
+ temp = bt[i]; bt[i] = bt[j]; bt[j] = temp;
+ temp = p[i]; p[i] = p[j]; p[j] = temp;
+ }
+ wt[0] = 0;
+ for (i = 1; i < n; i++)
+ wt[i] = wt[i - 1] + bt[i - 1];
+ printf("\nProcess\tBT\tWT\tTAT\n");
+ for (i = 0; i < n; i++) 
+{
+ tat[i] = wt[i] + bt[i];
+ avgwt += wt[i];
+ avgtat += tat[i];
+ printf("P%d\t%d\t%d\t%d\n", p[i], bt[i], wt[i], tat[i]);
+ }
+ printf("Average WT = %.2f\n", avgwt / n);
+ printf("Average TAT = %.2f\n", avgtat / n);
+ return 0;
+}
+
+3.round robin
+
+#include <stdio.h>
+int main() 
+{
+ int n, i, q, bt[10], rem[10], time = 0;
+ int wt[10] = {0}, tat[10], done;
+ printf("Enter number of processes: ");
+ scanf("%d", &n);
+ for (i = 0; i < n; i++) 
+{
+ printf("Burst time of P%d: ", i + 1);
+ scanf("%d", &bt[i]);
+ rem[i] = bt[i];
+ }
+ printf("Enter time quantum: ");
+ scanf("%d", &q);
+ do
+{
+ done = 1;
+ for (i = 0; i < n; i++)
+{ if (rem[i] > 0) 
+{
+ done = 0;
+ if (rem[i] > q) 
+{
+ time += q;
+ rem[i] -= q;
+ } 
+else 
+{
+ time += rem[i];
+ wt[i] = time - bt[i];
+ rem[i] = 0;
+ }
+ }
+ }
+ } while (!done);
+ printf("\nProcess\tBT\tWT\tTAT\n");
+ for (i = 0; i < n; i++) 
+ {
+ tat[i] = bt[i] + wt[i];
+ printf("P%d\t%d\t%d\t%d\n", i + 1, bt[i], wt[i], tat[i]);
+ }
+ return 0;
+}
+
+4.priority scheduling
+
+#include <stdio.h>
+int main() 
+{
+ int n, i, j, bt[10], pr[10], p[10], wt[10], tat[10], t;
+ printf("Enter number of processes: ");
+ scanf("%d", &n);
+ for (i = 0; i < n; i++)
+{
+ p[i] = i + 1;
+ printf("Enter burst time and priority of P%d: ", p[i]);
+ scanf("%d%d", &bt[i], &pr[i]);
+ }
+ for (i = 0; i < n - 1; i++)
+ for (j = i + 1; j < n; j++)
+ if (pr[i] > pr[j]) {
+ t = pr[i]; pr[i] = pr[j]; pr[j] = t;
+ t = bt[i]; bt[i] = bt[j]; bt[j] = t;
+ t = p[i]; p[i] = p[j]; p[j] = t;
+ } wt[0] = 0;
+ for (i = 1; i < n; i++)
+ wt[i] = wt[i - 1] + bt[i - 1];
+ printf("\nProcess\tBT\tPriority\tWT\tTAT\n");
+ for (i = 0; i < n; i++) {
+ tat[i] = wt[i] + bt[i];
+ printf("P%d\t%d\t%d\t\t%d\t%d\n",
+ p[i], bt[i], pr[i], wt[i], tat[i]);
+ }
+ return 0;
+}
